@@ -3,6 +3,10 @@ from django.urls import reverse
 from django.utils import timezone
 from django.contrib.auth.models import User
 
+class Category(models.Model):
+    name                    = models.CharField(max_length=100)
+    def __str__(self):
+        return self.name
 class Post(models.Model):
 
     class NewManager(models.Manager):
@@ -15,6 +19,7 @@ class Post(models.Model):
     )
 
     title                   = models.CharField(max_length=250)
+    category                = models.ForeignKey(Category, on_delete=models.PROTECT, default=1)
     excerpt                 = models.TextField(null=True)
     slug                    = models.SlugField(max_length=250, unique_for_date='publish')
     publish                 = models.DateTimeField(default=timezone.now)
