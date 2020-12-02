@@ -25,15 +25,15 @@ def post_single(request, post):
             user_comment.post = post
             user_comment.save()
             return HttpResponseRedirect("/" + post.slug)
-        else:
-            comment_form = NewCommentForm()
-        return render(
-            request,
-            'single.html',
-            {
-                'post': post,
-                'user_comment': user_comment,
-                'comments': comments,
-                'comment_form': comment_form,
-            },
-        )
+    else:
+        comment_form = NewCommentForm()
+    return render(
+        request,
+        'single.html',
+        {
+            'post': post,
+            'user_comment': user_comment,
+            'comments': comments,
+            'comment_form': comment_form,
+        },
+    )
