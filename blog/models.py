@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
+from mptt.models import MPTTModel, TreeForeignKey
 from django.contrib.auth.models import User
 
 def user_directory_path(instance, filename):
@@ -11,7 +12,6 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 class Post(models.Model):
-
     class NewManager(models.Manager):
         def get_queryset(self):
             return super().get_queryset().filter(status='published')
@@ -36,24 +36,21 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse('blog:post_single', args=[self.slug])
-
     class Meta:
         ordering = ('-publish',)
-
     def __str__(self):
         return self.title
 
-class Comment(models.Model):
-
+class Comment(MPTTModel):
     post                    = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    parent                  = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
     name                    = models.CharField(max_length=50)
     email                   = models.EmailField()
     content                 = models.TextField()
     publish                 = models.DateTimeField(auto_now_add=True)
     status                  = models.BooleanField(default=True)
-
-    class Meta:
-        ordering = ('publish',)
+    class MPTTMeta:
+        order_insertion_by = ['publish']
 
     def __str__(self):
         return f'Comment by {self.name}'
