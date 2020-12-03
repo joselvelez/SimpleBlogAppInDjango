@@ -25,7 +25,8 @@ class NewCommentForm(forms.ModelForm):
 
 class PostSearchForm(forms.Form):
     q = forms.CharField()
-    c = forms.ModelChoiceField(queryset=Category.objects.all().order_by('name'))
+    c = forms.ModelChoiceField(
+        queryset=Category.objects.all().order_by('name'))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -34,4 +35,6 @@ class PostSearchForm(forms.Form):
         self.fields['c'].label = 'Category'
         self.fields['q'].label = 'Search For'
         self.fields['q'].widget.attrs.update(
-            {'class': 'form-control'})
+            {'class': 'form-control menudd'})
+        self.fields['q'].widget.attrs.update(
+            {'data-toggle': 'dropdown'})
